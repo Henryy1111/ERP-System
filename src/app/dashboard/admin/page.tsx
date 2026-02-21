@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import Link from "next/link"; // Tambahkan ini untuk navigasi
+import Link from "next/link";
 import {
   Users,
   Package,
@@ -14,7 +14,9 @@ import {
   ArrowUpRight,
   ClipboardList,
   Loader2,
-  Plus,
+  LayoutDashboard,
+  ShieldCheck,
+  TrendingUp,
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -79,124 +81,134 @@ export default function AdminPage() {
     getRealData();
   }, []);
 
-  // Tambahkan 'href' untuk mengarahkan ke halaman CRUD masing-masing
-  const mainStats = [
-    {
-      label: "Management Users",
-      value: counts.users,
-      icon: Users,
-      color: "bg-blue-600",
-      shadow: "shadow-blue-100",
-      table: "profiles",
-      href: "/dashboard/admin/profiles", // Sesuai permintaan kamu tadi
-    },
-    {
-      label: "Product Catalog",
-      value: counts.products,
-      icon: Package,
-      color: "bg-indigo-600",
-      shadow: "shadow-indigo-100",
-      table: "products",
-      href: "/dashboard/admin/products",
-    },
-    {
-      label: "Total Stock Items",
-      value: counts.inventory,
-      icon: Boxes,
-      color: "bg-emerald-600",
-      shadow: "shadow-emerald-100",
-      table: "inventory",
-      href: "/dashboard/admin/inventory",
-    },
-    {
-      label: "Registered Suppliers",
-      value: counts.suppliers,
-      icon: Truck,
-      color: "bg-orange-600",
-      shadow: "shadow-orange-100",
-      table: "suppliers",
-      href: "/dashboard/admin/suppliers",
-    },
-  ];
-
-  const subStats = [
-    {
-      label: "Warehouses",
-      value: counts.warehouses,
-      icon: Warehouse,
-      table: "warehouses",
-      href: "/dashboard/admin/warehouses",
-    },
-    {
-      label: "Categories",
-      value: counts.categories,
-      icon: Tags,
-      table: "categories",
-      href: "/dashboard/admin/categories",
-    },
-    {
-      label: "Stock Movements",
-      value: counts.movements,
-      icon: Activity,
-      table: "stock_movements",
-      href: "/dashboard/admin/stock-movements",
-    },
-  ];
-
   if (loading) {
     return (
-      <div className="h-[70vh] flex flex-col items-center justify-center">
-        <Loader2 className="w-10 h-10 text-blue-600 animate-spin mb-4" />
-        <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em]">
-          Synchronizing Data...
+      <div className="h-[80vh] flex flex-col items-center justify-center space-y-4">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-16 h-16 border-4 border-blue-500/20 border-t-blue-600 rounded-full animate-spin" />
+          <LayoutDashboard className="w-6 h-6 text-blue-600 animate-pulse" />
+        </div>
+        <p className="text-slate-500 font-medium tracking-[0.2em] text-[10px] uppercase">
+          Securing Connection...
         </p>
       </div>
     );
   }
 
+  const mainStats = [
+    {
+      label: "User Management",
+      value: counts.users,
+      icon: Users,
+      color: "from-blue-600 to-indigo-700",
+      href: "/dashboard/admin/profiles",
+      trend: "+2.4%",
+    },
+    {
+      label: "Product Catalog",
+      value: counts.products,
+      icon: Package,
+      color: "from-violet-600 to-purple-700",
+      href: "/dashboard/admin/products",
+      trend: "+12%",
+    },
+    {
+      label: "Stock Inventory",
+      value: counts.inventory,
+      icon: Boxes,
+      color: "from-emerald-500 to-teal-700",
+      href: "/dashboard/admin/inventory",
+      trend: "Stable",
+    },
+    {
+      label: "Global Suppliers",
+      value: counts.suppliers,
+      icon: Truck,
+      color: "from-amber-500 to-orange-600",
+      href: "/dashboard/admin/suppliers",
+      trend: "+1 new",
+    },
+  ];
+
   return (
-    <div className="max-w-[1600px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      {/* --- HERO SECTION --- */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-[0.2em] mb-2">
-            <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            Admin Command Center
+    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 space-y-10 animate-in fade-in duration-700">
+      {/* --- HEADER --- */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100">
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">
+              System Verified
+            </span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Enterprise <span className="text-blue-600">Dashboard</span>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+            Executive{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+              Overview
+            </span>
           </h1>
-          <p className="text-slate-500 font-medium">
-            Real-time infrastructure monitoring and system control.
+          <p className="text-slate-500 text-sm font-medium">
+            Control and monitor your enterprise resources in real-time.
           </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden md:block text-right mr-4">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+              System Status
+            </p>
+            <p className="text-sm font-bold text-emerald-500">
+              All Systems Operational
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center">
+            <Activity className="w-5 h-5 text-slate-600" />
+          </div>
         </div>
       </div>
 
-      {/* --- MAIN CARDS (High Priority) --- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {mainStats.map((stat, index) => (
-          <Link href={stat.href} key={index} className="block group">
-            <div className="bg-white p-7 rounded-[32px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div className="flex justify-between items-start mb-6">
+      {/* --- MAIN CARDS --- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {mainStats.map((stat, i) => (
+          <Link href={stat.href} key={i} className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10 rounded-[32px] scale-95" />
+            <div className="bg-white border border-slate-200/60 p-6 rounded-[32px] shadow-sm group-hover:border-transparent group-hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
+              <div
+                className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-[0.03] rounded-bl-full transform translate-x-8 -translate-y-8`}
+              />
+
+              <div className="flex justify-between items-start relative z-10">
                 <div
-                  className={`p-4 rounded-2xl ${stat.color} text-white shadow-lg ${stat.shadow} group-hover:scale-110 transition-transform`}
+                  className={`p-3.5 rounded-2xl bg-gradient-to-br ${stat.color} text-white shadow-lg transform group-hover:scale-110 transition-transform duration-500`}
                 >
                   <stat.icon className="w-6 h-6" />
                 </div>
-                <div className="p-2 bg-slate-50 group-hover:bg-blue-600 group-hover:text-white rounded-xl transition-all">
-                  <ArrowUpRight className="w-5 h-5" />
+                <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-bold">
+                  <TrendingUp className="w-3 h-3" />
+                  {stat.trend}
                 </div>
               </div>
-              <div>
-                <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest">
+
+              <div className="mt-8 relative z-10">
+                <p className="text-slate-400 text-[11px] font-bold uppercase tracking-[0.15em] mb-1">
                   {stat.label}
                 </p>
-                <h3 className="text-4xl font-black text-slate-900 mt-1 tracking-tight">
-                  {stat.value}
-                </h3>
-                <div className="mt-4 flex items-center gap-1.5 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  View Details
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                    {stat.value}
+                  </h3>
+                  <span className="text-slate-300 text-xs font-medium italic">
+                    records
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between pt-4 border-t border-slate-50 relative z-10">
+                <span className="text-[10px] text-slate-400 font-bold uppercase group-hover:text-blue-600 transition-colors">
+                  Manage Data
+                </span>
+                <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                  <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>
             </div>
@@ -204,67 +216,94 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* --- SUB STATS & LOG SECTION --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Sub Stats Grid */}
-        <div className="lg:col-span-4 space-y-6">
-          <h3 className="font-black text-slate-800 text-lg px-2 uppercase tracking-widest text-xs">
-            Support Entities
+      {/* --- SECONDARY SECTION --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Support Grid */}
+        <div className="lg:col-span-1 space-y-4">
+          <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] px-2 mb-4">
+            Support Infrastructure
           </h3>
-          {subStats.map((sub, i) => (
-            <Link href={sub.href} key={i} className="block group">
-              <div className="bg-white/60 backdrop-blur-sm p-5 rounded-[24px] border border-slate-100 flex items-center justify-between hover:bg-white transition-all shadow-sm group-hover:shadow-md">
+          {[
+            {
+              label: "Warehouses",
+              val: counts.warehouses,
+              icon: Warehouse,
+              href: "/dashboard/admin/warehouses",
+            },
+            {
+              label: "Categories",
+              val: counts.categories,
+              icon: Tags,
+              href: "/dashboard/admin/categories",
+            },
+            {
+              label: "Movements",
+              val: counts.movements,
+              icon: Activity,
+              href: "/dashboard/admin/stock-movements",
+            },
+          ].map((item, idx) => (
+            <Link href={item.href} key={idx} className="block group">
+              <div className="bg-white/50 backdrop-blur-md border border-slate-200/50 p-4 rounded-[24px] flex items-center justify-between hover:bg-white hover:shadow-lg hover:border-white transition-all duration-300">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-all">
-                    <sub.icon className="w-5 h-5" />
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-blue-600 group-hover:rotate-12 transition-all">
+                    <item.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                      {sub.label}
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      {item.label}
                     </p>
-                    <p className="text-xl font-black text-slate-800">
-                      {sub.value}
+                    <p className="text-lg font-black text-slate-800">
+                      {item.val}
                     </p>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowUpRight className="w-4 h-4 text-blue-600" />
+                </div>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* Audit Log Panel */}
-        <div className="lg:col-span-8 bg-slate-900 rounded-[40px] p-1 shadow-2xl overflow-hidden min-h-[400px]">
-          <div className="bg-white h-full w-full rounded-[38px] overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
-                  <Activity className="w-5 h-5 text-slate-900" />
+        {/* Intelligence Panel */}
+        <div className="lg:col-span-2 relative group">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 rounded-[40px] shadow-2xl" />
+          <div className="relative h-full border border-white/10 rounded-[40px] overflow-hidden flex flex-col">
+            <div className="p-8 border-b border-white/5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center border border-blue-500/30">
+                  <ClipboardList className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h2 className="font-black text-slate-800 tracking-tight text-sm uppercase">
-                    Audit Log Status
+                  <h2 className="text-white font-bold tracking-tight">
+                    Audit Intelligence
                   </h2>
-                  <p className="text-[10px] text-slate-400 font-bold italic">
-                    Connected to table: stock_movements
+                  <p className="text-blue-400/60 text-[10px] font-bold uppercase tracking-widest">
+                    Active Monitoring System
                   </p>
                 </div>
               </div>
               <Link
                 href="/dashboard/movements"
-                className="text-[11px] font-black text-blue-600 border border-blue-100 px-4 py-2 rounded-xl hover:bg-blue-50 transition-all"
+                className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold transition-all border border-white/10"
               >
-                FULL AUDIT
+                VIEW FULL REPORT
               </Link>
             </div>
+
             <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
-              <ClipboardList className="w-16 h-16 text-slate-200 mb-4" />
-              <h4 className="text-slate-900 font-black italic">
-                Monitoring Active
+              <div className="w-20 h-20 rounded-full bg-blue-600/10 flex items-center justify-center mb-6 animate-pulse">
+                <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-blue-400" />
+                </div>
+              </div>
+              <h4 className="text-white text-lg font-bold mb-2">
+                Live Logs Connected
               </h4>
-              <p className="text-slate-400 text-sm max-w-xs">
-                Klik kartu statistik di atas untuk mulai mengelola data secara
-                CRUD.
+              <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
+                The system is currently aggregating data from all endpoints.
+                Click on any metric card to drill down into specific analytics.
               </p>
             </div>
           </div>
