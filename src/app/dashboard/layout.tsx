@@ -153,13 +153,13 @@ export default function DashboardLayout({
       name: "Suppliers",
       icon: Users,
       href: "/dashboard/admin/suppliers",
-      roles: ["ADMIN"],
+      roles: ["ADMIN", "MANAGER"],
     },
     {
       name: "User Profiles",
       icon: ShieldCheck,
       href: "/dashboard/admin/profiles",
-      roles: ["ADMIN"],
+      roles: ["ADMIN", "MANAGER"],
     },
   ];
 

@@ -52,7 +52,7 @@ export default function DashboardPage() {
         <div className="absolute inset-0 blur-xl bg-blue-400/20 animate-pulse" />
       </div>
       <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] animate-pulse">
-        Identifying Authority...
+        Identifying Authority Profiles...
       </p>
     </div>
   );
