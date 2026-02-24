@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { supabase } from "../../../lib/supabase";
 import {
   Truck,
@@ -14,12 +15,12 @@ import {
   X,
   Check,
   Calendar,
-  Circle,
   Trash2,
   AlertCircle,
   AlertTriangle,
   Globe,
   ShieldCheck,
+  ChevronLeft, // Icon untuk tombol Back
 } from "lucide-react";
 
 interface Supplier {
@@ -33,6 +34,7 @@ interface Supplier {
 }
 
 export default function ManagerSuppliers() {
+  const router = useRouter(); // Inisialisasi router
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -176,15 +178,11 @@ export default function ManagerSuppliers() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans antialiased text-slate-900">
-      {/* --- TOAST --- */}
+    <div className="min-h-screen bg-[#f8fafc] font-sans antialiased text-slate-900 pb-20">
+      {/* --- TOAST & MODALS (Sama seperti sebelumnya) --- */}
       {toast.show && (
         <div
-          className={`fixed top-6 right-6 z-[300] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border-l-4 animate-in slide-in-from-right-full ${
-            toast.type === "success"
-              ? "bg-white border-emerald-500 text-emerald-800"
-              : "bg-white border-rose-500 text-rose-800"
-          }`}
+          className={`fixed top-6 right-6 z-[300] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border-l-4 animate-in slide-in-from-right-full bg-white ${toast.type === "success" ? "border-emerald-500 text-emerald-800" : "border-rose-500 text-rose-800"}`}
         >
           {toast.type === "success" ? (
             <ShieldCheck size={20} />
@@ -195,28 +193,24 @@ export default function ManagerSuppliers() {
         </div>
       )}
 
-      {/* --- DELETE MODAL --- */}
+      {/* DELETE CONFIRMATION MODAL */}
       {deleteConfirm.show && (
         <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 backdrop-blur-sm bg-slate-900/50">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
             <div className="p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-rose-100 text-rose-600 rounded-lg">
-                  <AlertTriangle size={24} />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800">
-                  Confirm Deletion
-                </h3>
+              <div className="flex items-center gap-4 mb-4 text-rose-600">
+                <AlertTriangle size={24} />
+                <h3 className="text-xl font-bold">Confirm Deletion</h3>
               </div>
-              <p className="text-slate-600">
+              <p className="text-slate-600 text-sm">
                 Are you sure you want to delete this supplier? This action is
-                irreversible.
+                irreversible and may affect linked inventory records.
               </p>
             </div>
             <div className="bg-slate-50 p-4 flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm({ show: false, id: null })}
-                className="px-4 py-2 text-slate-400 font-bold hover:text-slate-600 transition-colors"
+                className="px-4 py-2 text-slate-400 font-bold hover:text-slate-600"
               >
                 Cancel
               </button>
@@ -231,7 +225,7 @@ export default function ManagerSuppliers() {
         </div>
       )}
 
-      {/* --- SIDE PANEL --- */}
+      {/* --- SIDE PANEL (Sama seperti sebelumnya) --- */}
       {isPanelOpen && (
         <div
           className="fixed inset-0 bg-slate-900/30 z-[100] backdrop-blur-[2px]"
@@ -247,13 +241,13 @@ export default function ManagerSuppliers() {
               <h2 className="text-lg font-bold tracking-tight">
                 {editingId ? "Modify Supplier" : "Register New Supplier"}
               </h2>
-              <p className="text-emerald-300 text-xs">
+              <p className="text-emerald-300 text-xs font-medium">
                 Update your global supply chain data
               </p>
             </div>
             <button
               onClick={() => setIsPanelOpen(false)}
-              className="bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors"
+              className="bg-white/10 hover:bg-white/20 p-2 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -262,19 +256,18 @@ export default function ManagerSuppliers() {
             onSubmit={handleSubmit}
             className="p-8 space-y-6 flex-1 overflow-y-auto"
           >
-            <div className="grid grid-cols-1 gap-6">
+            <div className="space-y-6">
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                   Company Name
                 </label>
                 <input
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-medium"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="e.g. Global Logistics Corp"
                 />
               </div>
               <div className="space-y-1.5">
@@ -284,12 +277,11 @@ export default function ManagerSuppliers() {
                 <input
                   type="email"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-medium"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  placeholder="contact@company.com"
                 />
               </div>
               <div className="space-y-1.5">
@@ -298,12 +290,11 @@ export default function ManagerSuppliers() {
                 </label>
                 <input
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-medium"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
-                  placeholder="+62 812..."
                 />
               </div>
               <div className="space-y-1.5">
@@ -313,12 +304,11 @@ export default function ManagerSuppliers() {
                 <textarea
                   required
                   rows={3}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-medium resize-none"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all resize-none"
                   value={formData.address}
                   onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                   }
-                  placeholder="Full company address..."
                 />
               </div>
               <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
@@ -329,7 +319,7 @@ export default function ManagerSuppliers() {
                   onChange={(e) =>
                     setFormData({ ...formData, is_active: e.target.checked })
                   }
-                  className="w-4 h-4 accent-emerald-600 cursor-pointer"
+                  className="w-4 h-4 accent-emerald-600"
                 />
                 <label
                   htmlFor="is_active"
@@ -344,14 +334,14 @@ export default function ManagerSuppliers() {
             <button
               type="button"
               onClick={() => setIsPanelOpen(false)}
-              className="flex-1 py-3 text-slate-400 font-bold hover:text-slate-600 transition-all uppercase text-[11px] tracking-widest"
+              className="flex-1 py-3 text-slate-400 font-bold uppercase text-[11px] tracking-widest"
             >
               Discard
             </button>
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest"
+              className="flex-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest transition-all shadow-lg shadow-emerald-100"
             >
               {isSubmitting ? (
                 <Loader2 className="animate-spin" size={16} />
@@ -366,11 +356,23 @@ export default function ManagerSuppliers() {
         </div>
       </div>
 
-      {/* --- HEADER (Floating Card Style) --- */}
-      <div className="max-w-[1600px] mx-auto px-8 pt-10 pb-4">
-        <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/40 rounded-2xl">
+      <div className="max-w-[1600px] mx-auto px-8 pt-10">
+        {/* --- BACK BUTTON (NEW) --- */}
+        <button
+          onClick={() => router.push("/dashboard/manager")}
+          className="group flex items-center gap-2 text-slate-400 hover:text-emerald-600 transition-colors mb-6"
+        >
+          <div className="p-1.5 bg-white border border-slate-200 rounded-lg group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-all shadow-sm">
+            <ChevronLeft size={16} />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.15em]">
+            Back to Dashboard
+          </span>
+        </button>
+
+        {/* --- HEADER --- */}
+        <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/40 rounded-2xl mb-10">
           <div className="px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            {/* Brand Section */}
             <div className="flex items-center gap-4">
               <div className="p-3 bg-emerald-600 rounded-xl text-white shadow-lg shadow-emerald-200">
                 <Globe size={24} />
@@ -385,7 +387,6 @@ export default function ManagerSuppliers() {
               </div>
             </div>
 
-            {/* Control Section */}
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div className="relative flex-1 md:w-80">
                 <Search
@@ -401,17 +402,15 @@ export default function ManagerSuppliers() {
               </div>
               <button
                 onClick={handleOpenAdd}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-100 transition-all uppercase text-[11px] tracking-widest active:scale-95"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-100 transition-all uppercase text-[11px] tracking-widest active:scale-95 whitespace-nowrap"
               >
                 <Plus size={16} /> New Entry
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* --- CONTENT --- */}
-      <div className="max-w-[1600px] mx-auto px-8 py-10">
+        {/* --- TABLE CONTENT --- */}
         {loading ? (
           <div className="h-96 flex flex-col items-center justify-center gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
@@ -457,13 +456,13 @@ export default function ManagerSuppliers() {
                           Since {new Date(s.created_at).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="px-6 py-7">
+                      <td className="px-6 py-7 text-center">
                         <div className="flex flex-col items-center gap-1.5">
                           <div className="flex items-center gap-2 text-[13px] text-slate-600 font-semibold px-3 py-1 bg-white border border-slate-100 rounded-lg shadow-sm">
                             <Mail size={13} className="text-emerald-500" />{" "}
                             {s.email}
                           </div>
-                          <div className="flex items-center gap-2 text-[12px] text-slate-500 font-medium">
+                          <div className="flex items-center gap-2 text-[12px] text-slate-500 font-medium italic">
                             <Phone size={13} className="text-slate-400" />{" "}
                             {s.phone}
                           </div>
@@ -478,18 +477,12 @@ export default function ManagerSuppliers() {
                           <span>{s.address}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-7">
-                        <div className="flex justify-center">
-                          <span
-                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black tracking-widest border shadow-sm ${
-                              s.is_active
-                                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                                : "bg-slate-50 border-slate-200 text-slate-400"
-                            }`}
-                          >
-                            {s.is_active ? "● ACTIVE" : "○ INACTIVE"}
-                          </span>
-                        </div>
+                      <td className="px-6 py-7 text-center">
+                        <span
+                          className={`px-4 py-1.5 rounded-lg text-[10px] font-black tracking-widest border shadow-sm ${s.is_active ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-slate-50 border-slate-200 text-slate-400"}`}
+                        >
+                          {s.is_active ? "● ACTIVE" : "○ INACTIVE"}
+                        </span>
                       </td>
                       <td className="px-6 py-7">
                         <div className="flex justify-center gap-2.5">
